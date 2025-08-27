@@ -2,14 +2,6 @@
 
 This tool automatically detects and clicks the Continue button in the VSCode LINGMA plugin.
 
-## Author
-
-Stephen Chen
-
-## Company
-
-Navinfo
-
 ## Features
 
 - Automatically detect the Continue button in VSCode LINGMA plugin
@@ -141,6 +133,21 @@ Note: The DISPLAY environment variable needs to be set to access the graphical i
 # View operation logs
 tail -f /tmp/vscode_auto_continue.log
 ```
+
+## Deploy to GitHub
+
+To deploy this project to GitHub:
+
+1. Create a new repository on GitHub (do not initialize with README, .gitignore, or license)
+2. Run the deployment script:
+   ```bash
+   ./deploy_to_github.sh
+   ```
+3. When prompted, replace YOUR_USERNAME and YOUR_REPOSITORY with your actual GitHub username and repository name
+4. If you encounter authentication issues, you may need to:
+   - Use GitHub CLI: `gh auth login`
+   - Set up SSH keys
+   - Use a personal access token
 
 ## Troubleshooting
 
