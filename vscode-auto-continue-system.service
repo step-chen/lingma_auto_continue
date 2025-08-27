@@ -1,0 +1,14 @@
+[Unit]
+Description=VSCode LINGMA Auto Continue Button Clicker
+After=graphical-session.target
+
+[Service]
+Type=simple
+Environment=DISPLAY=:0
+WorkingDirectory={{WORKING_DIR}}
+ExecStart={{VENV_PYTHON}} {{WORKING_DIR}}/vscode_auto_continue.py
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=graphical-session.target

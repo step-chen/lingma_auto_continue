@@ -1,0 +1,25 @@
+{
+    "line_template_paths": [
+        "templates/continue_button_line_light.png",
+        "templates/continue_button_line_dark.png"
+    ],
+    "button_template_paths": [
+        "templates/continue_button_light.png",
+        "templates/continue_button_dark.png"
+    ],
+    "threshold": 0.9,
+    "default_interval": 60,
+    "debug_mode": true,
+    "log_level": "DEBUG",
+    "log_file": "/tmp/vscode_auto_continue.log",
+    "debug_output_dir": "/tmp",
+    "max_log_size": 10485760,
+    "backup_count": 5,
+    "screenshot_methods": [
+        "x11_window",
+        "gnome_screenshot",
+        "scrot",
+        "xdotool",
+        "pyautogui"
+    ]
+}
