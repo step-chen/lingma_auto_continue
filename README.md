@@ -28,14 +28,19 @@ This tool automatically detects and clicks the Continue button in the VSCode LIN
 ./install.sh
 ```
 
-2. Capture the continue button screenshots and save as template images:
-   - Open the LINGMA plugin in VSCode
-   - Find the continue button in both light and dark themes
+The installation script will:
+- Check and install Python3, pip, and python3-venv if needed
+- Create a Python virtual environment named `lingma_venv` in the project directory
+- Install all required Python dependencies into this virtual environment
+
+2. Capture the button screenshots and save as template images:
+   - Identify the button you want to automatically click
+   - Find the button in both light and dark themes (if applicable)
    - Screenshot and save as PNG format files:
-     * LINGMA button line area (including title and button) in light theme
-     * LINGMA button line area (including title and button) in dark theme
-     * Continue button only in light theme
-     * Continue button only in dark theme
+     * Button line area (including title and button) in light theme
+     * Button line area (including title and button) in dark theme
+     * Button only in light theme
+     * Button only in dark theme
    - Save these files in the `templates` directory
 
 3. Update the configuration in `config.json` if needed:
@@ -49,18 +54,33 @@ This tool automatically detects and clicks the Continue button in the VSCode LIN
 
 ### Basic Usage
 
+Before running the tool, you need to activate the virtual environment that was created during installation:
+
 ```bash
+# Activate the virtual environment
+source lingma_venv/bin/activate
+
 # Continuous monitoring, detect every 60 seconds (uses default templates from config)
-python3 vscode_auto_continue.py
+python vscode_auto_continue.py
 
 # Specify detection interval (seconds)
-python3 vscode_auto_continue.py --interval 30
+python vscode_auto_continue.py --interval 30
 
 # Execute detection only once
-python3 vscode_auto_continue.py --once
+python vscode_auto_continue.py --once
 
 # Enable debug mode to save screenshots with marked positions
-python3 vscode_auto_continue.py --debug
+python vscode_auto_continue.py --debug
+
+# Deactivate the virtual environment when finished
+deactivate
+```
+
+Alternatively, you can run the tool directly without activating the virtual environment:
+
+```bash
+# Run directly using the Python interpreter from the virtual environment
+./lingma_venv/bin/python vscode_auto_continue.py --once
 ```
 
 ### Parameter Description
@@ -99,17 +119,19 @@ The tool uses a configuration file (`config.json`) with the following options:
 ## Template Files
 
 The tool looks for these template files by default:
-- `templates/continue_button_line_light.png` - LINGMA title and Continue button line in light theme
-- `templates/continue_button_line_dark.png` - LINGMA title and Continue button line in dark theme
-- `templates/continue_button_light.png` - Continue button only in light theme
-- `templates/continue_button_dark.png` - Continue button only in dark theme
+- `templates/continue_button_line_light.png` - Button line area with title and button in light theme
+- `templates/continue_button_line_dark.png` - Button line area with title and button in dark theme
+- `templates/continue_button_light.png` - Button only in light theme
+- `templates/continue_button_dark.png` - Button only in dark theme
+
+Note: Although the default template names refer to "continue button", this tool can actually be used to automatically click any button by replacing these template images with screenshots of your target button.
 
 ## Notes
 
 1. The template images should match the actual button appearance as accurately as possible
 2. If the screen resolution or scaling ratio changes, you may need to recreate the template images
 3. The script needs to run in a graphical interface environment
-4. Ensure the VSCode window is visible on the screen
+4. Ensure the target window is visible on the screen
 5. Having multiple templates for different themes increases detection accuracy
 6. Configuration file makes it easy to customize behavior without modifying code
 
@@ -189,3 +211,49 @@ If you're using VSCode and still seeing the import error in the editor, make sur
 1. Press `Ctrl+Shift+P` to open the command palette
 2. Type "Python: Select Interpreter" and select it
 3. Choose the interpreter from `./lingma_venv/bin/python`
+
+## Running on Wayland or with Display Authorization Issues
+
+If you encounter display connection errors such as:
+```
+Xlib.error.DisplayConnectionError: Can't connect to display ":0": b'Authorization required, but no authorization protocol specified\n'
+```
+
+This typically happens when running on Wayland sessions or when there are X11 authorization issues. To resolve this:
+
+### Solution Steps
+
+1. Add X11 authorization for your user:
+```bash
+xhost +SI:localuser:$(whoami)
+```
+
+2. Run the tool with the full command:
+```bash
+source lingma_venv/bin/activate && export DISPLAY=$(echo $DISPLAY) && python vscode_auto_continue.py --once
+```
+
+For continuous monitoring:
+```bash
+source lingma_venv/bin/activate && export DISPLAY=$(echo $DISPLAY) && python vscode_auto_continue.py
+```
+
+### Alternative Solutions
+
+- **Switch to Xorg session**: Log out and select "Ubuntu on Xorg" at the login screen instead of the default "Ubuntu" session.
+- **Use xwayland**: If you're on Wayland and xwayland is running, you might need to use a different DISPLAY value:
+  ```bash
+  export DISPLAY=:1
+  ```
+  
+- **SSH with X11 forwarding**: If connecting via SSH, use the -X flag:
+  ```bash
+  ssh -X username@hostname
+  ```
+
+### Verification
+
+You can verify if the issue is resolved by running a simple test:
+```bash
+python vscode_auto_continue.py --once
+```
